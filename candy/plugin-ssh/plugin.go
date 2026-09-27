@@ -11,6 +11,7 @@
 package ssh
 
 import (
+	"embed"
 	"fmt"
 	"os"
 
@@ -18,18 +19,23 @@ import (
 	pb "github.com/opencharly/spec/proto"
 )
 
+//go:embed schema/*.cue
+var schemaFS embed.FS
+
 // NewProvider returns the ssh command provider (command:ssh).
 func NewProvider() pb.ProviderServer { return &provider{} }
 
 // NewMeta advertises command:ssh — the compiled-in registry path resolves it and dispatches
-// Invoke(OpRun) with the threaded in-proc reverse channel. command:ssh is input-less (its args are
-// plain CLI tokens kong-parsed into the SshCmd tree), so it ships NO schema. Subcommands is derived
-// from SshCmd's OWN Kong tags via sdk.KongSubcommands (F-CLI-NEST) so `charly ssh --help` lists the
-// nested tunnel spice/vnc subcommands.
+// Invoke(OpRun) with the threaded in-proc reverse channel — together with this plugin's OWN
+// self-contained CUE schema (schema/ssh.cue) served over Describe via sdk.NewMeta: there is NO
+// schema-less plugin, the schema is the uniform surface every plugin presents even where a
+// capability's authored input is its pass-through CLI grammar rather than a structured
+// plugin_input. Subcommands is derived from SshCmd's OWN Kong tags via sdk.KongSubcommands
+// (F-CLI-NEST) so `charly ssh --help` lists the nested tunnel spice/vnc subcommands.
 func NewMeta() pb.PluginMetaServer {
 	return sdk.NewMeta("2026.209.0000",
 		[]sdk.ProvidedCapability{{Class: "command", Word: "ssh", Subcommands: sdk.KongSubcommands(&SshCmd{})}},
-		nil)
+		schemaFS)
 }
 
 // CliMain is the out-of-process CLI entrypoint (only reached when ssh is NOT compiled in). ssh
