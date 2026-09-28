@@ -1,7 +1,5 @@
-version: 2026.232.0520
 plugin-ssh:
     candy:
-        version: 2026.209.0000
         description: |-
             COMPILED-IN charly COMMAND-class plugin owning the externalized `charly ssh tunnel
             spice/vnc` command (#118 loader+check-tail cone). It opens an SSH-forwarded local
