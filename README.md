@@ -41,8 +41,7 @@ The command prints the local endpoint a SPICE/VNC client can then dial.
 ## Related
 
 - Owning skill: `/charly-core:ssh` — SSH tunnel access to remote SPICE and VNC
-  endpoints. This candy carries no `skill:` entity of its own; the gap is tracked
-  in
-  [opencharly/opencharly#291](https://github.com/opencharly/opencharly/issues/291).
+  endpoints, projected from this candy's own `skill:` entity; the body is
+  `.agents/skills/ssh/SKILL.md`.
 - `/charly-vm:vm` — the VM/libvirt surface the tunnel targets.
 - `/charly-internals:plugin` — the plugin/provider model.
